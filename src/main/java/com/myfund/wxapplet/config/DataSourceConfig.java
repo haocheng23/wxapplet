@@ -41,4 +41,11 @@ public class DataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
+    @Bean(name = "fiftharyDataSource")
+    @Qualifier("fiftharyDataSource")
+    @ConfigurationProperties(prefix = "spring.fifthary-datasource")
+    public DataSource fiftharyDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
 }

@@ -8,6 +8,7 @@ import com.myfund.wxapplet.repository.primary.YxStarDetailRepository;
 import com.myfund.wxapplet.repository.secondary.YxRepository;
 import com.myfund.wxapplet.repository.thirdary.YxStarDetail3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class FundServiceImpl implements FundService{
 
     @Autowired
     private YxStarDetail3Repository yxStarDetail3Repository;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Override
     public List<PubFundanalyseNewest> getYxStar() {

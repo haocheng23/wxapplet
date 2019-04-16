@@ -43,6 +43,15 @@ spring:
     max-active: 10
     max-idle: 5
     min-idle: 5
+  fifthary-datasource:
+    database: sql_server
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=GPDB
+    username: su
+    password: ysmz,.123
+    max-active: 10
+    max-idle: 5
+    min-idle: 5
 
   #hibernate配置
   jpa:
@@ -56,6 +65,7 @@ spring:
       secondary-dialect: org.hibernate.dialect.MySQL5Dialect
       thirdary-dialect: org.hibernate.dialect.SQLServer2008Dialect
       fourthary-dialect: org.hibernate.dialect.SQLServer2008Dialect
+      fifthary-dialect: org.hibernate.dialect.SQLServer2008Dialect
       naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
@@ -68,6 +78,28 @@ spring:
       additional-paths: src/main/java
       #classpath目录下的WEB-INF文件夹内容修改不重启
       exclude: WEB-INF/**
+
+#  #redis配置
+#  redis:
+#    #数据库索引
+#    database: 0
+#    host: 127.0.0.1
+#    port: 6379
+#    password:
+#    #链接池
+#    jedis:
+#      pool:
+#        #最大连接数（负值表示没有限制）
+#        max-active: 8
+#        #最大阻塞等待时间（负值表示没有限制）
+#        max-wait: -1
+#        #最大空闲链接
+#        max-idle: 8
+#        #最小空闲链接
+#        min-idle: 0
+#    #链接超时时间（毫秒）
+#    timeout: 0
+
 
 logging:
   config: classpath:log/logback-spring.xml

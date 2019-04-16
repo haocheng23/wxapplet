@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface YxRepository extends JpaRepository<YxStar, Integer> {
 
+    //nativeQuery  原生sql查询
     @Query(value = "select fundcode from yxstar", nativeQuery = true)
     List findFundcode();
 }

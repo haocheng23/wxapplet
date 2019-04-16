@@ -37,9 +37,15 @@ public class UserController {
     public String saveUser(@RequestParam("username") String username,
                            @RequestParam("password") String password,
                            @RequestParam("company") String company){
-//        ResultVo vo = new ResultVo();
-        String flag = userService.addUser(username, MD5.creatMD5(password), company);
-        if (flag != null) {
+        Boolean flag1 = userService.findUser(username, password);
+        if (!flag1){
+            vo.setCode("-8888");
+            vo.setMsg("该用户已注册");
+            String result = JSON.toJSONString(vo, true);//true美化结构
+            return result;
+        }
+        String flag2 = userService.addUser(username, MD5.creatMD5(password), company);
+        if (!flag2.equals("")) {
             vo.setCode("0000");
             vo.setMsg("注册成功");
         }else{

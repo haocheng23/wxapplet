@@ -1,9 +1,14 @@
 package com.myfund.wxapplet.service;
 
+import com.myfund.wxapplet.entity.primary.PubFundanalyseNewest;
+import com.myfund.wxapplet.entity.primary.ZxGuzhiOther;
 import com.myfund.wxapplet.entity.secondary.User;
 import com.myfund.wxapplet.entity.secondary.ZdRecord;
 import com.myfund.wxapplet.entity.secondary.ZxList;
+import com.myfund.wxapplet.repository.fifthary.GuZhiRepository;
 import com.myfund.wxapplet.repository.primary.YxStarDetailRepository;
+import com.myfund.wxapplet.repository.primary.ZxGuzhi2Repository;
+import com.myfund.wxapplet.repository.primary.ZxGuzhiRepository;
 import com.myfund.wxapplet.repository.secondary.UserRepository;
 import com.myfund.wxapplet.repository.secondary.YxRepository;
 import com.myfund.wxapplet.repository.secondary.ZdRepository;
@@ -33,11 +38,20 @@ public class UserServiceImpl implements  UserService{
     @Autowired
     private YxStarDetailRepository yxStarDetailRepository;
 
+    @Autowired
+    private ZxGuzhiRepository zxGuzhiRepository;
+
+    @Autowired
+    private ZxGuzhi2Repository zxGuzhi2Repository;
+
+    @Autowired
+    private GuZhiRepository guZhiRepository;
+
     @Override
     public String addUser(String username, String password, String company){
         User user = new User();
-        String uuid = UUID.randomUUID().toString().substring(0, 32);
-        user.setId(uuid);
+        /*String uuid = UUID.randomUUID().toString().substring(0, 32);
+        user.setId(uuid);*/
         user.setUsername(username);
         user.setPassword(password);
         user.setCompany(company);
@@ -60,7 +74,6 @@ public class UserServiceImpl implements  UserService{
         if(userOptional.isPresent()){
             User user1 = userOptional.get();
             System.out.println(user1.getId());
-
             return true;
         }else{
             System.out.println("no exit!");
@@ -126,10 +139,25 @@ public class UserServiceImpl implements  UserService{
         ZxList zx = new ZxList();
         zx.setUsername(username);
         Example<ZxList> zdExample = Example.of(zx);
-
         List<ZxList> all = zxRepository.findAll(zdExample);
         System.out.println(all.toString());
-        return all;
+        List fundCodeList = new ArrayList();
+        List resultList = new ArrayList();
+        for (int i = 0; i < all.size(); i++) {
+            fundCodeList.add(all.get(i).getFundcode());
+        }
+        String dealdate = zxGuzhiRepository.findDealdate(fundCodeList);
+        System.out.println(dealdate);
+        String subdealdate = dealdate.substring(5, dealdate.length() - 5);
+        resultList.add(subdealdate);
+        List<ZxGuzhiOther> guzhiOther = zxGuzhi2Repository.findGuzhiOther(fundCodeList);
+        System.out.println(guzhiOther.toString());
+        resultList.addAll(guzhiOther);
+
+        String tableName = guZhiRepository.findTableName();
+        System.out.println(tableName);
+
+        return resultList;
     }
 
 

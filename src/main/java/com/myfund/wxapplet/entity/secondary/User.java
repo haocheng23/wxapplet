@@ -1,11 +1,16 @@
 package com.myfund.wxapplet.entity.secondary;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
 public class User{
     @Id
+    //主键自增：hibernate的注解/生成32位UUID
+    @GenericGenerator(name="idGenerator", strategy="uuid")
+    @GeneratedValue(generator="idGenerator")
     private String id;
     @Column
     private String username;
