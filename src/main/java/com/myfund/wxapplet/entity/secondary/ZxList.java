@@ -13,6 +13,10 @@ public class ZxList {
     private String fundcode;
 
     @Column
+    private String fundname;
+
+
+    @Column
     private String username;
 
     public Integer getId() {
@@ -31,6 +35,14 @@ public class ZxList {
         this.fundcode = fundcode;
     }
 
+    public String getFundname() {
+        return fundname;
+    }
+
+    public void setFundname(String fundname) {
+        this.fundname = fundname;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -44,6 +56,7 @@ public class ZxList {
         return "ZxList{" +
                 "id=" + id +
                 ", fundcode='" + fundcode + '\'' +
+                ", fundname='" + fundname + '\'' +
                 ", username='" + username + '\'' +
                 '}';
     }

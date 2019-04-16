@@ -63,13 +63,20 @@ public class UserController {
                                  @RequestParam("password") String password){
 //        ResultVo vo = new ResultVo();
         String passwordMD5 = MD5.creatMD5(password);
+        User user = userService.findByUsername(username);
+        if (user == null){
+            vo.setCode("-8888");
+            vo.setMsg("用户名不存在");
+            String result = JSON.toJSONString(vo, true);//true美化结构
+            return result;
+        }
         Boolean flag = userService.findUser(username, passwordMD5);
         if (flag) {
             vo.setCode("0000");
             vo.setMsg("用户信息匹配");
         }else{
             vo.setCode("-9999");
-            vo.setMsg("用户信息不匹配");
+            vo.setMsg("用户名密码不匹配");
         }
         String result = JSON.toJSONString(vo, true);//true美化结构
         return result;
@@ -87,13 +94,19 @@ public class UserController {
     public String resetPassword(@RequestParam("username") String username,
                                   @RequestParam("oldPwd") String oldPwd,
                                   @RequestParam("newPwd") String newPwd){
+        User user = userService.findByUsername(username);
+        if (user == null){
+            vo.setCode("-8888");
+            vo.setMsg("用户名不存在");
+            String result = JSON.toJSONString(vo, true);//true美化结构
+            return result;
+        }
         //原密码加密
         String oldPwdMD5 = MD5.creatMD5(oldPwd);
         System.out.println(oldPwdMD5);
         //新密码加密
         String newPwdMD5 = MD5.creatMD5(newPwd);
         System.out.println(newPwdMD5);
-        User user = userService.findByUsername(username);
         if (oldPwdMD5.equals(user.getPassword())) {
             int i = userService.updatePwd(username, newPwdMD5,user.getId());
             if (i > 0) {
@@ -136,7 +149,14 @@ public class UserController {
                               @RequestParam("fundcode") String fundcode,
                               @RequestParam("fundname") String fundname){
         String zdRecord = userService.addZdRecord(username,fundcode,fundname);
-        String result = JSON.toJSONString(zdRecord, true);
+        if (zdRecord != null || !zdRecord.equals("")){
+            vo.setCode("0000");
+            vo.setMsg("保存诊断记录成功");
+        } else {
+            vo.setCode("-9999");
+            vo.setMsg("保存诊断记录失败");
+        }
+        String result = JSON.toJSONString(vo, true);
         return result;
     }
 
@@ -164,9 +184,14 @@ public class UserController {
     @RequestMapping("/addZx")
     @ResponseBody
     public String addZx(@RequestParam("username") String username,
-                        @RequestParam("fundcode") String fundcode){
-        int flag = userService.addZx(username, fundcode);
-        if (flag > 0) {
+                        @RequestParam("fundcode") String fundcode,
+                        @RequestParam("fundname") String fundname){
+
+        int flag = userService.addZx(username, fundcode, fundname);
+        if (flag == 0) {
+            vo.setCode("-8888");
+            vo.setMsg("已添加自选，不能重复添加");
+        }else if (flag == 1){
             vo.setCode("0000");
             vo.setMsg("添加自选成功");
         }else{

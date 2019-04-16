@@ -12,11 +12,9 @@ import java.util.List;
 @Repository
 public interface ZxRepository extends JpaRepository<ZxList, Integer> {
 
-    List findByUsername(String username);
+    /*@Query(value = "select * from zxlist where username = ?1 and fundcode = ?2", nativeQuery = true)
+    int findByUsernameAndFundcode(String username, String fundcode);*/
 
-    //加自选
-    /*@Query(value = "insert into ZxList (username,fundcode) values (?1, ?2)", nativeQuery = true)
-    Boolean addZx(String username, String fundcode);*/
 
     //取消自选
     @Modifying

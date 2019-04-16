@@ -10,9 +10,9 @@ spring:
   primary-datasource:
       database: sql_server
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      jdbc-url: jdbc:sqlserver://10.20.34.121:1433;DatabaseName=CMS
-      username: bd1
-      password: bd1myfp
+      jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=SecondaryData_New
+      username: su
+      password: ysmz,.123
       max-active: 10
       max-idle: 5
       min-idle: 5
@@ -25,6 +25,25 @@ spring:
       max-active: 10
       max-idle: 5
       min-idle: 5
+  thirdary-datasource:
+    database: sql_server
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=PrimaryData_New
+    username: su
+    password: ysmz,.123
+    max-active: 10
+    max-idle: 5
+    min-idle: 5
+  fourthary-datasource:
+    database: sql_server
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc-url: jdbc:sqlserver://10.20.34.121;DatabaseName=CMS_NEW
+    username: bd1
+    password: bd1myfp
+    max-active: 10
+    max-idle: 5
+    min-idle: 5
+
   #hibernate配置
   jpa:
 #    database: MYSQL
@@ -35,6 +54,8 @@ spring:
     hibernate:
       primary-dialect: org.hibernate.dialect.SQLServer2008Dialect
       secondary-dialect: org.hibernate.dialect.MySQL5Dialect
+      thirdary-dialect: org.hibernate.dialect.SQLServer2008Dialect
+      fourthary-dialect: org.hibernate.dialect.SQLServer2008Dialect
       naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
@@ -50,6 +71,11 @@ spring:
 
 logging:
   config: classpath:log/logback-spring.xml
-  path: F:/log/
+  #path: E:/wxapplet_log/
+  #不显示大量自动配置的相关信息
+  level:
+    org.springframework.boot.autoconfigure: ERROR
 
 debug: true
+
+

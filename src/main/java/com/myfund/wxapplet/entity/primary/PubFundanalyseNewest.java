@@ -13,6 +13,7 @@ public class PubFundanalyseNewest {
   private java.sql.Timestamp dealDate;
   private String fundName;
   private String fundType;
+  private double thisYearRedound;
   /*private String startDate;
   private String investStyle;
   private String fundManager;
@@ -36,7 +37,7 @@ public class PubFundanalyseNewest {
   private double twoYearRedoundSort;
   private double threeYearRedound;
   private double threeYearRedoundSort;
-  private double thisYearRedound;
+
   private double thisYearRedoundSort;
   private double upToNowRedound;
   private double upToNowRedoundSort;
@@ -196,7 +197,13 @@ public class PubFundanalyseNewest {
     this.fundType = fundType;
   }
 
+  public double getThisYearRedound() {
+    return thisYearRedound;
+  }
 
+  public void setThisYearRedound(double thisYearRedound) {
+    this.thisYearRedound = thisYearRedound;
+  }
   /*public String getStartDate() {
     return startDate;
   }
@@ -402,16 +409,6 @@ public class PubFundanalyseNewest {
   public void setThreeYearRedoundSort(double threeYearRedoundSort) {
     this.threeYearRedoundSort = threeYearRedoundSort;
   }
-
-
-  public double getThisYearRedound() {
-    return thisYearRedound;
-  }
-
-  public void setThisYearRedound(double thisYearRedound) {
-    this.thisYearRedound = thisYearRedound;
-  }
-
 
   public double getThisYearRedoundSort() {
     return thisYearRedoundSort;
@@ -1345,12 +1342,13 @@ public class PubFundanalyseNewest {
 
   @Override
   public String toString() {
-    return "{" +
+    return "PubFundanalyseNewest{" +
             "id=" + id +
             ", fundCode='" + fundCode + '\'' +
             ", dealDate=" + dealDate +
             ", fundName='" + fundName + '\'' +
             ", fundType='" + fundType + '\'' +
+            ", thisYearRedound=" + thisYearRedound +
             '}';
   }
 }

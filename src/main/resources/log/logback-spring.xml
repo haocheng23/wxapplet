@@ -9,7 +9,7 @@
     <!-- 设置上下文名称，用于区分不同应用程序的记录 -->
     <contextName>logback</contextName>
     <!-- 定义变量 name是名称，value是值。通过定义的值会被插入到logger上下文中。定义变量后，可以通过“${}”来使用变量。 -->
-    <property name="log.path" value="F:/log" />
+    <property name="log.path" value="E:/wxapplet_log/" />
 
 
 

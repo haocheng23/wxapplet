@@ -26,4 +26,19 @@ public class DataSourceConfig {
     public DataSource secondaryDataSource() {
         return DataSourceBuilder.create().build();
     }
+
+    @Bean(name = "thirdaryDataSource")
+    @Qualifier("thirdaryDataSource")
+    @ConfigurationProperties(prefix = "spring.thirdary-datasource")
+    public DataSource thirdaryDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "fourtharyDataSource")
+    @Qualifier("fourtharyDataSource")
+    @ConfigurationProperties(prefix = "spring.fourthary-datasource")
+    public DataSource fourtharyDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
 }

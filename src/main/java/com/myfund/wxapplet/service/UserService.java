@@ -24,14 +24,8 @@ public interface UserService {
 
     List<ZxList> findZxList(String username);
 
-    int addZx(String username, String fundcode);
+    int addZx(String username, String fundcode, String fundname);
 
     int cancelZx(String username, String fundcode);
-
-
-
-//    String getZxlist(String id);
-
-
 
 }

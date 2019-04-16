@@ -1,6 +1,5 @@
 package com.myfund.wxapplet.service;
 
-import com.myfund.wxapplet.entity.primary.PubFundanalyseNewest;
 import com.myfund.wxapplet.entity.secondary.User;
 import com.myfund.wxapplet.entity.secondary.ZdRecord;
 import com.myfund.wxapplet.entity.secondary.ZxList;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -94,21 +92,14 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public List<ZdRecord> findZdRecord(String username) {
-        ZdRecord zd = new ZdRecord();
-        zd.setUsername(username);
-        Example<ZdRecord> zdExample = Example.of(zd);
-
-        /*Optional<ZdRecord> zdOptional = zdRepository.findOne(zdExample);
-        if(zdOptional.isPresent()){
-            ZdRecord zd1 = zdOptional.get();
-            return zd1;
-        }else{
-            System.out.println("no exit!");
-            return null;
-        }*/
-        List<ZdRecord> all = zdRepository.findAll();
-        return all;
+    public List findZdRecord(String username) {
+//        ZdRecord zd = new ZdRecord();
+//        zd.setUsername(username);
+//        Example<ZdRecord> zdExample = Example.of(zd);
+//        List<ZdRecord> all = zdRepository.findAll(zdExample);
+        List list = zdRepository.findAllByUsernameOrderByZddateDescGroupbyFundcode(username);
+        System.out.println(list.toString());
+        return list;
     }
 
     @Override
@@ -136,19 +127,32 @@ public class UserServiceImpl implements  UserService{
         zx.setUsername(username);
         Example<ZxList> zdExample = Example.of(zx);
 
-        List<ZxList> all = zxRepository.findAll();
+        List<ZxList> all = zxRepository.findAll(zdExample);
+        System.out.println(all.toString());
         return all;
     }
 
 
     @Override
-    public int addZx(String username, String fundcode) {
+    public int addZx(String username, String fundcode, String fundname) {
         ZxList zx = new ZxList();
         zx.setUsername(username);
         zx.setFundcode(fundcode);
-        ZxList zx2 = zxRepository.save(zx);
-//        Boolean flag = zxRepository.addZx(username, fundcode);
-        return zx2.getId();
+        zx.setFundname(fundname);
+        Example<ZxList> userExample = Example.of(zx);
+        Optional<ZxList> zxOptional = zxRepository.findOne(userExample);
+        if(zxOptional.isPresent()){
+            ZxList zx1 = zxOptional.get();
+            System.out.println("exit!");
+            return 0;
+        }else{
+            System.out.println("no exit!");
+            ZxList zx2 = zxRepository.save(zx);
+            if (zx2.getId() > 0){
+                return 1;
+            }
+            return -1;
+        }
     }
 
 
@@ -165,18 +169,15 @@ public class UserServiceImpl implements  UserService{
     }
 
 
-    /*public String getZxlist(String id){
-        Optional<User> byId = userRepository.findById(id);
-        User user = byId.get();
-        PubFundanalyseNewest result = yxStarDetailRepository.findYxStarByFundcode(user.getUsername());
-        return result.toString();
-    }*/
-
-    public static void main(String[] args) {
+    public void main(String[] args) {
         /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = sdf.format(Calendar.getInstance().getTime());
         System.out.println(format);*/
         /*List<YxStar> all = yxRepository.findAll();
         System.out.println(all.toString());*/
+
+        System.out.println("111111111");
+        List list = zdRepository.findAllByUsernameOrderByZddateDescGroupbyFundcode("八宝");
+        System.out.println(list.toString());
     }
 }
