@@ -8,6 +8,8 @@ import com.myfund.wxapplet.repository.primary.YxStarDetailRepository;
 import com.myfund.wxapplet.repository.secondary.YxRepository;
 import com.myfund.wxapplet.repository.thirdary.YxStarDetail3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+//1.添加缓存注解
+@CacheConfig(cacheNames = "my-redis-cache1")
 public class FundServiceImpl implements FundService{
 
     @Autowired
@@ -32,9 +36,11 @@ public class FundServiceImpl implements FundService{
     private YxStarDetail3Repository yxStarDetail3Repository;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
 
+    //2.指定缓存的key  value要和方法名一样
     @Override
+    @Cacheable(value = "getYxStar", keyGenerator = "keyGenerator")
     public List<PubFundanalyseNewest> getYxStar() {
         List fundcodeList = yxRepository.findFundcode();
         List resultList  = new ArrayList();
@@ -61,6 +67,7 @@ public class FundServiceImpl implements FundService{
             System.out.println(resultList.toString());
             System.out.println("--------------------------------");
         }
+
         return resultList;
     }
 

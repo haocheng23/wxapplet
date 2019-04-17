@@ -24,6 +24,7 @@ public class FundController {
     @RequestMapping(name = "/getYxStar")
     @ResponseBody
     public String getYxStar(){
+        System.out.println("只有第一次才会打印sql语句");
         List<PubFundanalyseNewest> yxStar = fundService.getYxStar();
         String result = JSON.toJSONString(yxStar, true);
         return result;

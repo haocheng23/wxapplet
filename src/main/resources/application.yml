@@ -8,23 +8,23 @@ server:
 
 spring:
   primary-datasource:
-      database: sql_server
-      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=SecondaryData_New
-      username: su
-      password: ysmz,.123
-      max-active: 10
-      max-idle: 5
-      min-idle: 5
+    database: sql_server
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=SecondaryData_New
+    username: su
+    password: ysmz,.123
+    max-active: 10
+    max-idle: 5
+    min-idle: 5
   secondary-datasource:
-      database: mysql
-      driver-class-name: com.mysql.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3306/wxapplet?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
-      username: root
-      password: root
-      max-active: 10
-      max-idle: 5
-      min-idle: 5
+    database: mysql
+    driver-class-name: com.mysql.jdbc.Driver
+    jdbc-url: jdbc:mysql://localhost:3306/wxapplet?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: root
+    max-active: 10
+    max-idle: 5
+    min-idle: 5
   thirdary-datasource:
     database: sql_server
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -97,7 +97,7 @@ spring:
 #        max-idle: 8
 #        #最小空闲链接
 #        min-idle: 0
-#    #链接超时时间（毫秒）
+#    #链接超时时间（毫秒） 2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位
 #    timeout: 0
 
 
