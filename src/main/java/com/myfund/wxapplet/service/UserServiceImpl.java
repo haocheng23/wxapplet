@@ -5,6 +5,7 @@ import com.myfund.wxapplet.entity.primary.ZxGuzhiOther;
 import com.myfund.wxapplet.entity.secondary.User;
 import com.myfund.wxapplet.entity.secondary.ZdRecord;
 import com.myfund.wxapplet.entity.secondary.ZxList;
+import com.myfund.wxapplet.entity.thirdary.FundanalysisNew;
 import com.myfund.wxapplet.repository.fifthary.GuZhiRepository;
 import com.myfund.wxapplet.repository.primary.YxStarDetailRepository;
 import com.myfund.wxapplet.repository.primary.ZxGuzhi2Repository;
@@ -13,7 +14,10 @@ import com.myfund.wxapplet.repository.secondary.UserRepository;
 import com.myfund.wxapplet.repository.secondary.YxRepository;
 import com.myfund.wxapplet.repository.secondary.ZdRepository;
 import com.myfund.wxapplet.repository.secondary.ZxRepository;
+import com.myfund.wxapplet.repository.thirdary.YxStarDetail3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@CacheConfig
 public class UserServiceImpl implements  UserService{
 
     @Autowired
@@ -37,6 +42,9 @@ public class UserServiceImpl implements  UserService{
 
     @Autowired
     private YxStarDetailRepository yxStarDetailRepository;
+
+    @Autowired
+    private YxStarDetail3Repository yxStarDetail3Repository;
 
     @Autowired
     private ZxGuzhiRepository zxGuzhiRepository;
@@ -135,6 +143,7 @@ public class UserServiceImpl implements  UserService{
 
 
     @Override
+    @Cacheable(value = "findZxList", keyGenerator = "keyGenerator")
     public List<ZxList> findZxList(String username) {
         ZxList zx = new ZxList();
         zx.setUsername(username);
@@ -147,16 +156,20 @@ public class UserServiceImpl implements  UserService{
             fundCodeList.add(all.get(i).getFundcode());
         }
         String dealdate = zxGuzhiRepository.findDealdate(fundCodeList);
-        System.out.println(dealdate);
-        String subdealdate = dealdate.substring(5, dealdate.length() - 5);
+        String subdealdate = dealdate.substring(5, dealdate.length());
         resultList.add(subdealdate);
         List<ZxGuzhiOther> guzhiOther = zxGuzhi2Repository.findGuzhiOther(fundCodeList);
-        System.out.println(guzhiOther.toString());
-        resultList.addAll(guzhiOther);
-
-        String tableName = guZhiRepository.findTableName();
-        System.out.println(tableName);
-
+        List<FundanalysisNew> zxadvice = yxStarDetail3Repository.findIntegratedScoreAdvice(fundCodeList);
+        for (int i = 0; i < fundCodeList.size(); i++) {
+            Map map = new HashMap();
+            map.put("fundcode", guzhiOther.get(i).getFundCode());
+            map.put("fundName", guzhiOther.get(i).getFundName());
+            map.put("fundType", guzhiOther.get(i).getFundType());
+            map.put("DayBenefit", guzhiOther.get(i).getDayBenefit());
+            map.put("unitEquity", guzhiOther.get(i).getUnitEquity());
+            map.put("IntegratedScoreAdvice", zxadvice.get(i).getIntegratedScoreAdvice());
+            resultList.add(map);
+        }
         return resultList;
     }
 

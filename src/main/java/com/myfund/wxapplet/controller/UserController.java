@@ -176,6 +176,7 @@ public class UserController {
     @RequestMapping("/getZxList")
     @ResponseBody
     public String getZxList(@RequestParam("username") String username){
+        System.out.println("只有第一次才会打印sql语句");
         List<ZxList> zxList = userService.findZxList(username);
         String result = JSON.toJSONString(zxList, true);
         return result;

@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Service
 //1.添加缓存注解
-@CacheConfig(cacheNames = "my-redis-cache1")
+@CacheConfig
 public class FundServiceImpl implements FundService{
 
     @Autowired

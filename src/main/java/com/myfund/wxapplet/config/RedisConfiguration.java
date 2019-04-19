@@ -25,11 +25,13 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,11 +61,12 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     /**
      * 设置自动key的生成规则，配置spring boot的注解，进行方法级别的缓存
      * 当不指定缓存的 key 时，SpringBoot 会使用 SimpleKeyGenerator 生成 key
-     * 使用：进行分割，可以很多显示出层级关系
+     * 生成key的策略 根据类名+方法名+所有参数的值生成唯一的一个key
      */
     @Bean
     @Override
     public KeyGenerator keyGenerator() {
+        //写法一：
         // 这里其实就是new了一个KeyGenerator对象，只是这是lambda表达式的写法，我感觉很好用，大家感兴趣可以去了解下
         return (target, method, params) -> {
             StringBuilder sb = new StringBuilder();
@@ -77,12 +80,27 @@ public class RedisConfiguration extends CachingConfigurerSupport {
             log.info("-----------自动生成Redis Key -> [{}]", rsToUse);
             return rsToUse;
         };
+        //写法二：
+        /*return new KeyGenerator() {
+            @Override
+            public Object generate(Object target, Method method, Object... params) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(target.getClass().getName());
+                sb.append(method.getName());
+                for (Object obj : params) {
+                    sb.append(obj.toString());
+                }
+                return sb.toString();
+            }
+        };*/
     }
 
     /**
-     * 初始化缓存管理器，在这里可以配置缓存的整体过期时间什么的，此处默认没有配置
+     * 初始化缓存管理器
      */
-    /*@Bean
+    /*
+    //1. 默认没有配置整体过期时间
+    @Bean
     @Override
     public CacheManager cacheManager() {
         log.info("初始化缓存管理器 -> [{}]", "CacheManager RedisCacheManager Start...");
@@ -92,7 +110,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         return builder.build();
     }*/
 
-    // 自定义配置初始化缓存管理器
+    //2. 自定义配置
     /*@Bean
     public CacheManager cacheManager(JedisConnectionFactory jedisConnectionFactory) {
         log.info("-----------初始化自定义缓存管理器 -> [{}]------------", "DIY-CacheManager RedisCacheManager Start");
@@ -122,6 +140,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }*/
 
 
+    /*
+    //3. 配置整体缓存时间
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
@@ -129,14 +149,53 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         return RedisCacheManager
                 .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
                 .cacheDefaults(redisCacheConfiguration).build();
-    }
+    }*/
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        log.info("初始化自定义缓存管理器 -> [{}]", "CacheManager RedisCacheManager Start...");
+        return new RedisCacheManager(
+                RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
+                this.getRedisCacheConfigurationWithTtl(600), // 默认策略，未配置的 key 会使用这个
+                this.getRedisCacheConfigurationMap() // 指定 key 策略
+        );
+    }
 
+    private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
+        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
+        redisCacheConfigurationMap.put("getYxStar", this.getRedisCacheConfigurationWithTtl(3000));
+        redisCacheConfigurationMap.put("findZxList", this.getRedisCacheConfigurationWithTtl(3000));
+
+        return redisCacheConfigurationMap;
+    }
+
+    private RedisCacheConfiguration getRedisCacheConfigurationWithTtl(Integer seconds) {
+//        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+
+        FastJson2JsonRedisSerializer redisSerializer = new FastJson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        redisSerializer.setObjectMapper(om);
+
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        redisCacheConfiguration = redisCacheConfiguration.serializeValuesWith(
+                RedisSerializationContext
+                        .SerializationPair
+                        .fromSerializer(redisSerializer)
+        ).entryTtl(Duration.ofSeconds(seconds));
+
+        return redisCacheConfiguration;
+    }
+
+    /**
+     * 定义redis的序列化器
+     *
+     */
+    /*@Bean
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
         //使用Jackson2JsonRedisSerializer来设置序列化   redis的value值
 //        Jackson2JsonRedisSerializer redisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
         //使用Fastjson2JsonRedisSerializer来序列化和反序列化redis的value值 by haocheng
         FastJson2JsonRedisSerializer redisSerializer = new FastJson2JsonRedisSerializer(Object.class);
 
@@ -157,7 +216,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         redisTemplate.setHashValueSerializer(redisSerializer); // Hash value序列化
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
-    }
+    }*/
 
     /**
      * 异常处理，当Redis发生异常时，打印日志，但是程序正常走
@@ -171,17 +230,14 @@ public class RedisConfiguration extends CachingConfigurerSupport {
             public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
                 log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
             }
-
             @Override
             public void handleCachePutError(RuntimeException e, Cache cache, Object key, Object value) {
                 log.error("Redis occur handleCachePutError：key -> [{}]；value -> [{}]", key, value, e);
             }
-
             @Override
             public void handleCacheEvictError(RuntimeException e, Cache cache, Object key) {
                 log.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
             }
-
             @Override
             public void handleCacheClearError(RuntimeException e, Cache cache) {
                 log.error("Redis occur handleCacheClearError：", e);
@@ -194,7 +250,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      * 此内部类就是把yml的配置数据，进行读取，创建JedisConnectionFactory和JedisPool，以供外部类初始化缓存管理器使用
      * 可以去看@ConfigurationProperties和@Value的作用
      */
-    @Configuration
+    /*@Configuration
     @PropertySource(value = "classpath:application-redis.properties")
     class DataJedisProperties {
         @Value("${spring.redis.host}")
@@ -226,10 +282,10 @@ public class RedisConfiguration extends CachingConfigurerSupport {
             return factory;
         }
 
-        /**
+        *//**
          * redis连接池的一些配置
          *
-         */
+         *//*
         @Bean
         public JedisPool redisPoolFactory() {
             log.info("---------JedisPool init successful，host -> [{}]；port -> [{}]-----------", host, port);
@@ -240,6 +296,6 @@ public class RedisConfiguration extends CachingConfigurerSupport {
             JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
             return jedisPool;
         }
-    }
+    }*/
 
 }
