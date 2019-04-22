@@ -19,6 +19,7 @@ public interface ZxRepository extends JpaRepository<ZxList, Integer> {
     //取消自选
     @Modifying
     @Transactional
-    @Query(value = "delete from zxlist where username = ?1 and fundcode = ?2", nativeQuery = true)
+//    @Query(value = "delete from zxlist where username = ?1 and fundcode = ?2", nativeQuery = true)
     int deleteByUsernameAndFundcode(String username, String fundcode);
+
 }

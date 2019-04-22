@@ -1,6 +1,5 @@
 package com.myfund.wxapplet.service;
 
-import com.myfund.wxapplet.entity.primary.PubFundanalyseNewest;
 import com.myfund.wxapplet.entity.primary.ZxGuzhiOther;
 import com.myfund.wxapplet.entity.secondary.User;
 import com.myfund.wxapplet.entity.secondary.ZdRecord;
@@ -17,6 +16,8 @@ import com.myfund.wxapplet.repository.secondary.ZxRepository;
 import com.myfund.wxapplet.repository.thirdary.YxStarDetail3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -175,6 +176,7 @@ public class UserServiceImpl implements  UserService{
 
 
     @Override
+    @CacheEvict(cacheNames = "findZxList", allEntries = true)
     public int addZx(String username, String fundcode, String fundname) {
         ZxList zx = new ZxList();
         zx.setUsername(username);
@@ -198,6 +200,7 @@ public class UserServiceImpl implements  UserService{
 
 
     @Override
+    @CacheEvict(cacheNames = "findZxList", allEntries = true)
     public int cancelZx(String username, String fundcode) {
         int flag = zxRepository.deleteByUsernameAndFundcode(username, fundcode);
         /*Boolean flag = false;
