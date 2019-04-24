@@ -1,10 +1,14 @@
 package com.myfund.wxapplet.service;
 
+import com.alibaba.fastjson.JSON;
 import com.myfund.wxapplet.entity.fourthary.HotFundContent;
 import com.myfund.wxapplet.entity.primary.PubFundanalyseNewest;
+import com.myfund.wxapplet.entity.secondary.Tcrecord;
+import com.myfund.wxapplet.entity.secondary.YxStar;
 import com.myfund.wxapplet.entity.thirdary.FundanalysisNew;
 import com.myfund.wxapplet.repository.fourthary.YxStarDetail4Repository;
 import com.myfund.wxapplet.repository.primary.YxStarDetailRepository;
+import com.myfund.wxapplet.repository.secondary.TcRepository;
 import com.myfund.wxapplet.repository.secondary.YxRepository;
 import com.myfund.wxapplet.repository.thirdary.YxStarDetail3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +17,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 //1.添加缓存注解
@@ -34,6 +36,9 @@ public class FundServiceImpl implements FundService{
 
     @Autowired
     private YxStarDetail3Repository yxStarDetail3Repository;
+
+    @Autowired
+    private TcRepository tcRepository;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -71,13 +76,36 @@ public class FundServiceImpl implements FundService{
         return resultList;
     }
 
-    /**
-     * @description: 特殊符号转换
-     * @author: haocheng
-     * @date: 2019-04-15 14:26
-     *
-     */
-    public void transfer(){
-
+    @Override
+    public String saveYxStar(String oldfundcode, String newfundcode, String fundname, String reason, String status) {
+        Tcrecord t = new Tcrecord();
+        t.setFundname(fundname);
+        t.setReason(reason);
+        t.setCreated(new Timestamp(new Date().getTime()));
+        t.setUpdated(new Timestamp(new Date().getTime()));
+        t.setStatus(status);
+        System.out.println(t.toString());
+        String str = null;
+        //调入
+        if (status.equals("1")){
+            t.setFundcode(newfundcode);
+            int i = yxRepository.updateYxStar(oldfundcode, newfundcode);
+            if (i < 0) {
+                return str;
+            }
+            System.out.println(t.toString());
+            str = tcRepository.save(t).toString();
+        }else if (status.equals("0")){ //调出
+            t.setFundcode(oldfundcode);
+            int i = yxRepository.deleteByFundcode(oldfundcode);
+            if (i < 0) {
+                return str;
+            }
+            System.out.println(t.toString());
+            str = tcRepository.save(t).toString();
+        }
+        return str;
     }
+
+
 }
