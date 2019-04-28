@@ -79,6 +79,13 @@ spring:
       #classpath目录下的WEB-INF文件夹内容修改不重启
       exclude: WEB-INF/**
 
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    cache: false
+
+
 #  #redis配置
 #  redis:
 #    #数据库索引
@@ -99,7 +106,6 @@ spring:
 #        min-idle: 0
 #    #链接超时时间（毫秒） 2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位
 #    timeout: 0
-
 
 logging:
   config: classpath:log/logback-spring.xml

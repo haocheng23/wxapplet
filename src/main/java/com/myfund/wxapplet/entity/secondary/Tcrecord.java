@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 
 @Entity
 public class Tcrecord {
@@ -14,8 +15,8 @@ public class Tcrecord {
   private String fundcode;
   private String fundname;
   private String reason;
-  private java.sql.Timestamp created;
-  private java.sql.Timestamp updated;
+  private String created;
+  private String updated;
   private String status;
 
 
@@ -27,7 +28,6 @@ public class Tcrecord {
     this.id = id;
   }
 
-
   public String getFundcode() {
     return fundcode;
   }
@@ -35,7 +35,6 @@ public class Tcrecord {
   public void setFundcode(String fundcode) {
     this.fundcode = fundcode;
   }
-
 
   public String getFundname() {
     return fundname;
@@ -45,7 +44,6 @@ public class Tcrecord {
     this.fundname = fundname;
   }
 
-
   public String getReason() {
     return reason;
   }
@@ -54,24 +52,21 @@ public class Tcrecord {
     this.reason = reason;
   }
 
-
-  public java.sql.Timestamp getCreated() {
+  public String getCreated() {
     return created;
   }
 
-  public void setCreated(java.sql.Timestamp created) {
+  public void setCreated(String created) {
     this.created = created;
   }
 
-
-  public java.sql.Timestamp getUpdated() {
+  public String getUpdated() {
     return updated;
   }
 
-  public void setUpdated(java.sql.Timestamp updated) {
+  public void setUpdated(String updated) {
     this.updated = updated;
   }
-
 
   public String getStatus() {
     return status;
@@ -85,7 +80,6 @@ public class Tcrecord {
   public String toString() {
     return "Tcrecord{" +
             "id=" + id +
-            ", fundcode='" + fundcode + '\'' +
             ", fundname='" + fundname + '\'' +
             ", reason='" + reason + '\'' +
             ", created=" + created +

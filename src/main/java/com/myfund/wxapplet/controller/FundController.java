@@ -3,14 +3,13 @@ package com.myfund.wxapplet.controller;
 import com.alibaba.fastjson.JSON;
 import com.myfund.wxapplet.entity.primary.PubFundanalyseNewest;
 import com.myfund.wxapplet.entity.secondary.Tcrecord;
+import com.myfund.wxapplet.entity.secondary.YxStar;
 import com.myfund.wxapplet.service.FundService;
 import com.myfund.wxapplet.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -49,25 +48,45 @@ public class FundController {
      *
      */
     @RequestMapping(value = "/saveTiaocang")
-    @ResponseBody
-    public String saveTiaocang(@RequestParam("oldfundcode") String oldfundcode,
-                               @RequestParam("newfundcode") String newfundcode,
-                               @RequestParam("fundname") String fundname,
-                               @RequestParam("reason") String reason,
-                               @RequestParam("status") String status){
+    public String saveTiaocang(@ModelAttribute(value="tcrecord") Tcrecord tcrecord){
 
-
-        String str = fundService.saveYxStar(oldfundcode, newfundcode, fundname, reason, status);
-        if (status.equals("1") && str != null){
+        String str = fundService.saveYxStar(tcrecord);
+        if (tcrecord.getStatus().equals("1") && str != null){
             vo.setCode("0000");
             vo.setMsg("调入成功");
-        }else if(status.equals("0") && str != null){
+        }else if(tcrecord.getStatus().equals("0") && str != null){
             vo.setCode("0000");
             vo.setMsg("调出成功");
         }else{
             vo.setCode("-9999");
             vo.setMsg("保存调仓记录失败");
         }
-        return JSON.toJSONString(vo, true);
+
+        return "result";
     }
+
+    @RequestMapping(value = "/toTiaocang")
+    public String toAdmin(Model model) {
+        model.addAttribute("tcrecord", new Tcrecord());
+        return "admin";
+    }
+
+
+    @RequestMapping(value = "/getYxTiaocang")
+    @ResponseBody
+    public List<YxStar> getYxTiaocang(){
+        List<YxStar> yxTiaocang = fundService.getYxTiaocang();
+        return yxTiaocang;
+    }
+
+
+    @RequestMapping(value = "/getTiaocang")
+    @ResponseBody
+    public String getTiaocang(){
+        List<Tcrecord> tiaocang = fundService.getTiaocang();
+        String result = JSON.toJSONString(tiaocang, true);
+        return result;
+    }
+
+
 }

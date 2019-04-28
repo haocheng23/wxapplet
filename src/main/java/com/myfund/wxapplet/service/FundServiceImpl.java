@@ -14,10 +14,13 @@ import com.myfund.wxapplet.repository.thirdary.YxStarDetail3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -77,27 +80,21 @@ public class FundServiceImpl implements FundService{
     }
 
     @Override
-    public String saveYxStar(String oldfundcode, String newfundcode, String fundname, String reason, String status) {
-        Tcrecord t = new Tcrecord();
-        t.setFundname(fundname);
-        t.setReason(reason);
-        t.setCreated(new Timestamp(new Date().getTime()));
-        t.setUpdated(new Timestamp(new Date().getTime()));
-        t.setStatus(status);
+    public String saveYxStar(Tcrecord t) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datetime = sdf.format(Calendar.getInstance().getTime());
+        t.setCreated(datetime);
+        t.setUpdated(datetime);
         System.out.println(t.toString());
         String str = null;
         //调入
-        if (status.equals("1")){
-            t.setFundcode(newfundcode);
-            int i = yxRepository.updateYxStar(oldfundcode, newfundcode);
-            if (i < 0) {
-                return str;
-            }
-            System.out.println(t.toString());
+        if (t.getStatus().equals("1")){
+            YxStar yxStar = new YxStar();
+            yxStar.setFundcode(t.getFundcode());
+            yxRepository.save(yxStar);
             str = tcRepository.save(t).toString();
-        }else if (status.equals("0")){ //调出
-            t.setFundcode(oldfundcode);
-            int i = yxRepository.deleteByFundcode(oldfundcode);
+        }else if (t.getStatus().equals("0")){ //调出
+            int i = yxRepository.deleteByFundcode(t.getFundcode());
             if (i < 0) {
                 return str;
             }
@@ -105,6 +102,19 @@ public class FundServiceImpl implements FundService{
             str = tcRepository.save(t).toString();
         }
         return str;
+    }
+
+    @Override
+    public List<YxStar> getYxTiaocang() {
+
+        List list = yxRepository.findFundcode();
+        return list;
+    }
+
+    @Override
+    public List<Tcrecord> getTiaocang() {
+        List<Tcrecord> all = tcRepository.findAll();
+        return all;
     }
 
 

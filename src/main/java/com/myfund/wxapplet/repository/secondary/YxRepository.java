@@ -17,10 +17,10 @@ public interface YxRepository extends JpaRepository<YxStar, Integer> {
     List findFundcode();
 
 
-    @Modifying
+    /*@Modifying
     @Transactional
     @Query(value = "update yxstar SET fundcode = ?2 WHERE fundcode = ?1", nativeQuery = true)
-    int updateYxStar(String oldfundcode, String newfundcode);
+    int updateYxStar(String oldfundcode, String newfundcode);*/
 
     @Modifying
     @Transactional
