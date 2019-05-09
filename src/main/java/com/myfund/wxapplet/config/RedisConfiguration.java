@@ -163,7 +163,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
 
     private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
-        redisCacheConfigurationMap.put("getYxStar", this.getRedisCacheConfigurationWithTtl(3000));
+        redisCacheConfigurationMap.put("getYxStar", this.getRedisCacheConfigurationWithTtl(150));
         redisCacheConfigurationMap.put("findZxList", this.getRedisCacheConfigurationWithTtl(120));
 
         return redisCacheConfigurationMap;
