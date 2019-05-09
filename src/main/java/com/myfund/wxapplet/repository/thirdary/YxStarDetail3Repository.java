@@ -11,6 +11,11 @@ public interface YxStarDetail3Repository extends JpaRepository<FundanalysisNew, 
     @Query(value = "select FundCode,IntegratedScore,IntegratedScoreAdvice from FUNDANALYSIS_NEW where FundCode = ?1",nativeQuery = true)
     List<FundanalysisNew> findYxStar3ByFundcode(String fundcode);
 
+
+    @Query(value = "select FundCode,IntegratedScore,IntegratedScoreAdvice from FUNDANALYSIS_NEW where FundCode in (?1)",nativeQuery = true)
+    List<FundanalysisNew> findYxStar3ByFundcode(List fundcodeList);
+
+
     @Query(value = "select FundCode,IntegratedScore,IntegratedScoreAdvice from FUNDANALYSIS_NEW where FundCode in (?1)",nativeQuery = true)
     List<FundanalysisNew> findIntegratedScoreAdvice(List fundCodeList);
 

@@ -1,9 +1,18 @@
 package com.myfund.wxapplet.entity.secondary;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "yxstar")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class YxStar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,32 +21,7 @@ public class YxStar {
     @Column
     private String fundcode;
 
-
-    public YxStar() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFundcode() {
-        return fundcode;
-    }
-
-    public void setFundcode(String fundcode) {
-        this.fundcode = fundcode;
-    }
+    private Integer level;
 
 
-    @Override
-    public String toString() {
-        return "YxStar{" +
-                "id=" + id +
-                ", fundcode='" + fundcode + '\'' +
-                '}';
-    }
 }

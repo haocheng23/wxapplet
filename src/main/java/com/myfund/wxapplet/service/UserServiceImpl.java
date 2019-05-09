@@ -152,6 +152,9 @@ public class UserServiceImpl implements  UserService{
         List<ZxList> all = zxRepository.findAll(zdExample);
         System.out.println(all.toString());
         List fundCodeList = new ArrayList();
+        if (all.size() == 0 || all == null){
+            return fundCodeList;
+        }
         List resultList = new ArrayList();
         for (int i = 0; i < all.size(); i++) {
             fundCodeList.add(all.get(i).getFundcode());

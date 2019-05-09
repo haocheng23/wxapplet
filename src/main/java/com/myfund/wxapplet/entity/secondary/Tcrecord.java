@@ -1,10 +1,11 @@
 package com.myfund.wxapplet.entity.secondary;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.sql.Timestamp;
 
 @Entity
 public class Tcrecord {
@@ -18,6 +19,7 @@ public class Tcrecord {
   private String created;
   private String updated;
   private String status;
+  private String level;
 
 
   public long getId() {
@@ -76,15 +78,25 @@ public class Tcrecord {
     this.status = status;
   }
 
+  public String getLevel() {
+    return level;
+  }
+
+  public void setLevel(String level) {
+    this.level = level;
+  }
+
   @Override
   public String toString() {
     return "Tcrecord{" +
             "id=" + id +
+            ", fundcode='" + fundcode + '\'' +
             ", fundname='" + fundname + '\'' +
             ", reason='" + reason + '\'' +
-            ", created=" + created +
-            ", updated=" + updated +
+            ", created='" + created + '\'' +
+            ", updated='" + updated + '\'' +
             ", status='" + status + '\'' +
+            ", level='" + level + '\'' +
             '}';
   }
 }

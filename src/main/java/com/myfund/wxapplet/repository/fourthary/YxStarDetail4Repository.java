@@ -10,7 +10,12 @@ import java.util.List;
 public interface YxStarDetail4Repository extends JpaRepository<HotFundContent, Integer> {
 
     //1076
-    @Query(value = "select ID,title,subtitle,Reason,ZHStar from HotFundContent where nodeid=65 and SubTitle=?1", nativeQuery = true)
+    @Query(value = "select ID,title,subtitle,Reason,ZHStar from HotFundContent where nodeid=1076 and SubTitle=?1", nativeQuery = true)
     List<HotFundContent> findYxStar4ByFundcode(String fundcode);
+
+
+
+    @Query(value = "select ID,title,subtitle,Reason,ZHStar from HotFundContent where nodeid=1076 and SubTitle in (?1)", nativeQuery = true)
+    List<HotFundContent> findYxStar4ByFundcode(List fundcodeList);
 
 }
