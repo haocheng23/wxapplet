@@ -38,6 +38,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <!-- 排除内置tomcat容器 用于外部tomcat部署 -->
             <!-- 方式一-->
@@ -48,6 +52,7 @@
                 </exclusion>
             </exclusions>-->
         </dependency>
+
 
         <!-- 方式二 -->
         <dependency>
@@ -62,7 +67,6 @@
             <artifactId>gson</artifactId>
             <version>2.6.2</version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -97,7 +101,6 @@
             <artifactId>mssql-jdbc</artifactId>
             <!--<scope>runtime</scope>-->
         </dependency>
-
         <!-- mysql 依赖配置-->
         <dependency>
             <groupId>mysql</groupId>
@@ -105,6 +108,8 @@
             <!--<scope>runtime</scope>-->
             <version>5.1.42</version>
         </dependency>
+
+
 
         <!-- Spring Boot Redis依赖 -->
         <!-- 注意：1.5版本的依赖和2.0的依赖不一样，1.5名字里面应该没有“data”, 2.0必须是“spring-boot-starter-data-redis” 这个才行-->

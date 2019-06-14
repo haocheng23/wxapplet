@@ -7,55 +7,104 @@ server:
     context-path: /myfund
 
 spring:
-  primary-datasource:
-    database: sql_server
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=SecondaryData_New
-    username: su
-    password: ysmz,.123
-    max-active: 10
-    max-idle: 5
-    min-idle: 5
-  secondary-datasource:
-    database: mysql
-    driver-class-name: com.mysql.jdbc.Driver
-    jdbc-url: jdbc:mysql://localhost:3306/wxapplet?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
-    username: root
-    password: root
-    max-active: 10
-    max-idle: 5
-    min-idle: 5
-  thirdary-datasource:
-    database: sql_server
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=PrimaryData_New
-    username: su
-    password: ysmz,.123
-    max-active: 10
-    max-idle: 5
-    min-idle: 5
-  fourthary-datasource:
-    database: sql_server
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    jdbc-url: jdbc:sqlserver://10.20.34.121;DatabaseName=CMS_NEW
-    username: bd1
-    password: bd1myfp
-    max-active: 10
-    max-idle: 5
-    min-idle: 5
-  fifthary-datasource:
-    database: sql_server
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=GPDB
-    username: su
-    password: ysmz,.123
-    max-active: 10
-    max-idle: 5
-    min-idle: 5
+  #  primary-datasource:
+  #    database: sql_server
+  #    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=SecondaryData_New
+  #    username: su
+  #    password: ysmz,.123
+  #    max-active: 10
+  #    max-idle: 5
+  #    min-idle: 5
+  #  secondary-datasource:
+  #    database: mysql
+  #    driver-class-name: com.mysql.jdbc.Driver
+  #    jdbc-url: jdbc:mysql://localhost:3306/wxapplet?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+  #    username: root
+  #    password: root
+  #    max-active: 10
+  #    max-idle: 5
+  #    min-idle: 5
+  #  thirdary-datasource:
+  #    database: sql_server
+  #    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=PrimaryData_New
+  #    username: su
+  #    password: ysmz,.123
+  #    max-active: 10
+  #    max-idle: 5
+  #    min-idle: 5
+  #  fourthary-datasource:
+  #    database: sql_server
+  #    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #    jdbc-url: jdbc:sqlserver://10.20.34.121;DatabaseName=CMS_NEW
+  #    username: bd1
+  #    password: bd1myfp
+  #    max-active: 10
+  #    max-idle: 5
+  #    min-idle: 5
+  #  fifthary-datasource:
+  #    database: sql_server
+  #    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #    jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=GPDB
+  #    username: su
+  #    password: ysmz,.123
+  #    max-active: 10
+  #    max-idle: 5
+  #    min-idle: 5
+
+
+
+  datasource:
+    primary:
+      database: sql_server
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=SecondaryData_New
+      username: su
+      password: ysmz,.123
+      max-active: 10
+      max-idle: 5
+      min-idle: 5
+    secondary:
+      database: mysql
+      driver-class-name: com.mysql.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/wxapplet?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+      username: root
+      password: root
+      max-active: 10
+      max-idle: 5
+      min-idle: 5
+    thirdary:
+      database: sql_server
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=PrimaryData_New
+      username: su
+      password: ysmz,.123
+      max-active: 10
+      max-idle: 5
+      min-idle: 5
+    fourthary:
+      database: sql_server
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      jdbc-url: jdbc:sqlserver://10.20.34.121;DatabaseName=CMS_NEW
+      username: bd1
+      password: bd1myfp
+      max-active: 10
+      max-idle: 5
+      min-idle: 5
+    fifthary:
+      database: sql_server
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      jdbc-url: jdbc:sqlserver://10.20.34.122;DatabaseName=GPDB
+      username: su
+      password: ysmz,.123
+      max-active: 10
+      max-idle: 5
+      min-idle: 5
 
   #hibernate配置
   jpa:
-#    database: MYSQL
+    #    database: MYSQL
     show-sql: true
     properties:
       hibernate:
@@ -67,7 +116,7 @@ spring:
       fourthary-dialect: org.hibernate.dialect.SQLServer2008Dialect
       fifthary-dialect: org.hibernate.dialect.SQLServer2008Dialect
       naming:
-          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
   #热部署
   devtools:
@@ -109,11 +158,12 @@ spring:
 
 logging:
   config: classpath:log/logback-spring.xml
-  #path: E:/wxapplet_log/
+  path: E:/wxapplet_log/
   #不显示大量自动配置的相关信息
   level:
     org.springframework.boot.autoconfigure: ERROR
 
-debug: true
+
+#debug: true
 
 
